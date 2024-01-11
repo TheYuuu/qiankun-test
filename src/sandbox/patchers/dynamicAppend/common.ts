@@ -196,7 +196,6 @@ export type ContainerConfig = {
   appName: string;
   proxy: WindowProxy;
   strictGlobal: boolean;
-  speedySandbox: boolean;
   dynamicStyleSheetElements: Array<HTMLStyleElement | HTMLLinkElement>;
   appWrapperGetter: CallableFunction;
   scopedCSS: boolean;
@@ -227,7 +226,6 @@ function getOverwrittenAppendChildOrInsertBefore(opts: {
         appWrapperGetter,
         proxy,
         strictGlobal,
-        speedySandbox,
         dynamicStyleSheetElements,
         scopedCSS,
         excludeAssetFilter,
@@ -302,14 +300,11 @@ function getOverwrittenAppendChildOrInsertBefore(opts: {
           const { fetch } = frameworkConfiguration;
           const referenceNode = mountDOM.contains(refChild) ? refChild : null;
 
-          const scopedGlobalVariables = speedySandbox ? cachedGlobals : [];
-
           if (src) {
             let isRedfinedCurrentScript = false;
             execScripts(null, [src], proxy, {
               fetch,
               strictGlobal,
-              scopedGlobalVariables,
               beforeExec: () => {
                 const isCurrentScriptConfigurable = () => {
                   const descriptor = Object.getOwnPropertyDescriptor(document, 'currentScript');
@@ -349,7 +344,7 @@ function getOverwrittenAppendChildOrInsertBefore(opts: {
           }
 
           // inline script never trigger the onload and onerror event
-          execScripts(null, [`<script>${text}</script>`], proxy, { strictGlobal, scopedGlobalVariables });
+          execScripts(null, [`<script>${text}</script>`], proxy, { strictGlobal });
           const dynamicInlineScriptCommentElement = document.createComment('dynamic inline script replaced by qiankun');
           dynamicScriptAttachedCommentMap.set(element, dynamicInlineScriptCommentElement);
           return rawDOMAppendOrInsertBefore.call(mountDOM, dynamicInlineScriptCommentElement, referenceNode);

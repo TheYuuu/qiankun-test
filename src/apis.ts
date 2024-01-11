@@ -37,20 +37,6 @@ const autoDowngradeForLowVersionBrowser = (configuration: FrameworkConfiguration
 
       return { ...configuration, sandbox: typeof sandbox === 'object' ? { ...sandbox, loose: true } : { loose: true } };
     }
-
-    if (
-      !isConstDestructAssignmentSupported() &&
-      (sandbox === true || (typeof sandbox === 'object' && sandbox.speedy !== false))
-    ) {
-      console.warn(
-        '[qiankun] Speedy mode will turn off as const destruct assignment not supported in current browser!',
-      );
-
-      return {
-        ...configuration,
-        sandbox: typeof sandbox === 'object' ? { ...sandbox, speedy: false } : { speedy: false },
-      };
-    }
   }
 
   return configuration;
